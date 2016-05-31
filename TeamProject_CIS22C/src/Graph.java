@@ -1,3 +1,4 @@
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -6,11 +7,14 @@ public class Graph<E>
 {
    // the graph data is all here --------------------------
    protected HashMap<E, Vertex<E> > vertexSet;
+   
+   private LinkedStack removedVertices;
 
    // public graph methods --------------------------------
    public Graph ()
    {
       vertexSet = new HashMap<E, Vertex<E> >();
+      removedVertices = new LinkedStack<>();
    }
 
    public void addEdge(E source, E dest, double cost)
@@ -158,10 +162,20 @@ public class Graph<E>
    }
 
 
-// WRITE THE INSTANCE METHOD HERE TO
+   // WRITE THE INSTANCE METHOD HERE TO
    //         WRITE THE GRAPH's vertices and its
    //         adjacency list TO A TEXT FILE (SUGGEST TO PASS AN
    //        ALREADY OPEN PrintWriter TO THIS) !
+   public void saveAsTextFile(PrintWriter writer) {
+	   
+   }
+   
+   public void undoRemoval() {
+	   undoRemoval(1);
+   }
 
+   public void undoRemoval(int times) {
+	   
+   }
 
 }
