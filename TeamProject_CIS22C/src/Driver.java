@@ -1,7 +1,24 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Driver {
-	public static void main(String[] args) {
-		GraphGenerator frame = new GraphGenerator();
+	public static void main(String[] args) throws FileNotFoundException, IOException {
+		// build graph
+	      Graph<String> myGraph1 = new Graph<String>();
+	      myGraph1.addEdge("A", "B", 0);   myGraph1.addEdge("A", "C", 0);  myGraph1.addEdge("A", "D", 0);
+	      myGraph1.addEdge("B", "E", 0);   myGraph1.addEdge("B", "F", 0);
+	      myGraph1.addEdge("C", "G", 0);
+	      myGraph1.addEdge("D", "H", 0);   myGraph1.addEdge("D", "I", 0);
+	      myGraph1.addEdge("F", "J", 0);
+	      myGraph1.addEdge("G", "K", 0);   myGraph1.addEdge("G", "L", 0);
+	      myGraph1.addEdge("H", "M", 0);   myGraph1.addEdge("H", "N", 0);
+	      myGraph1.addEdge("I", "N", 0);
+
+	      myGraph1.saveAsTextFile(new PrintWriter(new File("euler.txt")));
+	
+		/*	GraphGenerator frame = new GraphGenerator();
 
 		frame.setSize(1000,1000);
 		frame.setVisible(true);
@@ -19,6 +36,6 @@ public class Driver {
 		frame.connect(0, 2, 123);
 
 		
-		frame.drawGraph();
+		frame.drawGraph(); */
 	}
 }

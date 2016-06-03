@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.Map.Entry;
@@ -8,13 +11,13 @@ public class Graph<E>
    // the graph data is all here --------------------------
    protected HashMap<E, Vertex<E> > vertexSet;
    
-   private LinkedStack removedVertices;
+   private LinkedStack<Pair<E, E>> removedEdges;
 
    // public graph methods --------------------------------
    public Graph ()
    {
       vertexSet = new HashMap<E, Vertex<E> >();
-      removedVertices = new LinkedStack<>();
+      removedEdges = new LinkedStack<>();
    }
 
    public void addEdge(E source, E dest, double cost)
@@ -27,18 +30,22 @@ public class Graph<E>
 
       // add dest to source's adjacency list
       src.addToAdjList(dst, cost);
-      //dst.addToAdjList(src, cost); // ADD THIS IF UNDIRECTED GRAPH
+      dst.addToAdjList(src, cost); // ADD THIS IF UNDIRECTED GRAPH
    }
 
    public void addEdge(E source, E dest, int cost)
    {
       addEdge(source, dest, (double)cost);
    }
+   
+   public void addEdge(E source, E dest) {
+	   addEdge(source, dest, 0);
+   }
 
    // adds vertex with x in it, and always returns ref to it
    public Vertex<E> addToVertexSet(E x)
    {
-      Vertex<E> retVal=null;
+      Vertex<E> retVal = null;
       Vertex<E> foundVertex;
 
       // find if Vertex already in the list:
@@ -56,7 +63,8 @@ public class Graph<E>
       return retVal;   // should never happen
    }
 
-   public boolean remove(E start, E end)
+   // remove edge, not vertices, all vertices will remain in the graph even if we remove everything
+   public boolean remove(E start, E end)	 
    {
 	   Vertex<E> startVertex = vertexSet.get(start);
 	   boolean removedOK = false;
@@ -64,18 +72,21 @@ public class Graph<E>
 	   if( startVertex != null )
 	   {
 		   Pair<Vertex<E>, Double> endPair = startVertex.adjList.remove(end);
-		   removedOK = endPair!=null;
+		   removedOK = endPair != null;
 	   }
-	   /*// Add if UNDIRECTED GRAPH:
+	   
+	    // Undirected Graph so we remove the other way as well
 		Vertex<E> endVertex = vertexSet.get(end);
 		if( endVertex != null )
 		{
 			Pair<Vertex<E>, Double> startPair = endVertex.adjList.remove(start);
-			removedOK = startPair!=null ;
+			removedOK = startPair != null;
 		}
-		*/
-
-	   return removedOK;
+		
+		if (removedOK) 
+			removedEdges.push(new Pair<E, E>(start, end));
+		
+	    return removedOK;
    }
 
    public void showAdjTable()
@@ -158,7 +169,21 @@ public class Graph<E>
 
    public void depthFirstTraversalHelper(Vertex<E> startVertex, Visitor<E> visitor)
    {
-        // YOU COMPLETE THIS (USE THE ALGORITHM GIVEN FOR LESSON 11 EXERCISE)
+	    // YOU COMPLETE THIS (USE THE ALGORITHM GIVEN FOR LESSON 11 EXERCISE)
+	   startVertex.visit();
+	   Vertex<E> nextVertex = startVertex;
+	   
+	   Iterator<Map.Entry<E, Pair<Vertex<E>, Double>>> iter = nextVertex.iterator(); // iterate adjacency list
+
+	   while( iter.hasNext() )
+	   {
+		   Entry<E, Pair<Vertex<E>, Double>> nextEntry = iter.next();
+		   Vertex<E> neighborVertex = nextEntry.getValue().first;
+		   if( !neighborVertex.isVisited() ) {
+			   depthFirstTraversalHelper(neighborVertex, visitor);
+			   neighborVertex.visit();
+		   }
+	   }
    }
 
 
@@ -166,8 +191,56 @@ public class Graph<E>
    //         WRITE THE GRAPH's vertices and its
    //         adjacency list TO A TEXT FILE (SUGGEST TO PASS AN
    //        ALREADY OPEN PrintWriter TO THIS) !
-   public void saveAsTextFile(PrintWriter writer) {
+   public void saveAsTextFile(PrintWriter writer) throws IOException {  
+	   BufferedWriter bufferedWriter = null;
+	   Iterator<Entry<E, Vertex<E>>> iter;
 	   
+	   try {
+		   bufferedWriter = new BufferedWriter(writer);
+		   bufferedWriter.write("------------------------");
+		   bufferedWriter.newLine();
+	       iter = vertexSet.entrySet().iterator();
+	       while( iter.hasNext() ) {
+	    	   saveAdjacencyList(iter.next().getValue(), bufferedWriter);
+	       }
+	       writer.println();
+	   }
+       catch (IOException ex) {
+    	   
+       }
+	   finally {
+		   bufferedWriter.close();
+	   }
+   }
+   
+   private void saveAdjacencyList(Vertex<E> startVertex, BufferedWriter bufferedWriter) {
+	   Iterator<Entry<E, Pair<Vertex<E>, Double>>> iter ;
+	   Entry<E, Pair<Vertex<E>, Double>> entry;
+	   Pair<Vertex<E>, Double> pair;
+	   
+	   try {
+		   bufferedWriter.newLine();
+		   bufferedWriter.write("Adj List for " + startVertex.getData() + ": ");
+		   iter = startVertex.adjList.entrySet().iterator();
+		   while( iter.hasNext() ) {
+		         entry = iter.next();
+		         pair = entry.getValue();
+		         bufferedWriter.write(
+		        	 pair.first.data + "("
+		             + String.format("%3.1f", pair.second)
+		             + ") " 
+		         );
+		   }
+		   bufferedWriter.write("\n");;
+	   }
+	   catch (IOException ex) {
+		   
+	   }
+   }
+   
+   public void save() {
+	   
+	     
    }
    
    public void undoRemoval() {
@@ -175,7 +248,18 @@ public class Graph<E>
    }
 
    public void undoRemoval(int times) {
-	   
+	   if (times > 0 && removedEdges.size() > 0) {
+		   Pair<E,E> currentEdge;
+
+		   if (times >= removedEdges.size())
+			   times = removedEdges.size();
+
+		   while (times > 0) {
+			   currentEdge = removedEdges.pop();
+			   addEdge(currentEdge.first, currentEdge.second);
+			   --times;
+		   }	   	   
+	   }
    }
 
 }
