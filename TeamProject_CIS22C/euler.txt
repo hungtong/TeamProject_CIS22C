@@ -1,0 +1,30 @@
+
+------------------------
+
+Adj List for A: B(0.0) C(0.0) D(0.0) 
+
+Adj List for B: A(0.0) E(0.0) F(0.0) 
+
+Adj List for C: A(0.0) G(0.0) 
+
+Adj List for D: A(0.0) H(0.0) I(0.0) 
+
+Adj List for E: B(0.0) 
+
+Adj List for F: B(0.0) J(0.0) 
+
+Adj List for G: C(0.0) K(0.0) L(0.0) 
+
+Adj List for H: D(0.0) M(0.0) N(0.0) 
+
+Adj List for I: D(0.0) N(0.0) 
+
+Adj List for J: F(0.0) 
+
+Adj List for K: G(0.0) 
+
+Adj List for L: G(0.0) 
+
+Adj List for M: H(0.0) 
+
+Adj List for N: H(0.0) I(0.0) 

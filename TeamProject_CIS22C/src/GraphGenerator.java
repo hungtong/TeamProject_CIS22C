@@ -24,7 +24,7 @@ public class GraphGenerator extends JFrame {
 		edges = new ArrayList<>();
 		
 		width = DEFAULT_DIMENSION;
-		height = DEFAULT_DIMENSION;
+		height = DEFAULT_DIMENSION;		
 	}
 	
 	public GraphGenerator(int width, int height) {
@@ -45,8 +45,8 @@ public class GraphGenerator extends JFrame {
 		vertices.add(new SimpleVertex(name, xPixel, yPixel));
 	}
 	
-	public void connect(int source, int destination, double cost) {
-		edges.add(new SimpleEdge(source, destination, cost));
+	public void connect(int source, int destination) {
+		edges.add(new SimpleEdge(source, destination));
 	}
 	
 	public void drawGraph() {
@@ -73,14 +73,15 @@ public class GraphGenerator extends JFrame {
 				edgeDesination.yPixel
 			);
 			
-			// draw a cost in the middle of the edge
+			/* For Euler Circuit, we do not concern about cost nor distance between two vertices
+			 // draw a cost in the middle of the edge
 			graph.drawString(
 				String.valueOf(currentEdge.cost),
 				edgeSource.xPixel + Math.abs(edgeSource.xPixel - edgeDesination.xPixel) / 2,
 				edgeSource.yPixel + Math.abs(edgeSource.yPixel - edgeDesination.yPixel) / 2
 			);
+			*/
 		}
-		
 		
 		int vertexWidth;
 		for (SimpleVertex currentVertex : vertices) {
@@ -115,12 +116,10 @@ public class GraphGenerator extends JFrame {
 	private class SimpleEdge {
 		private int source;
 		private int destination;
-		private double cost;
-		
-		private SimpleEdge(int source, int destination, double cost) {
+
+		private SimpleEdge(int source, int destination) {
 			this.source = source;
 			this.destination = destination;
-			this.cost = cost;
 		}
 	}
 	
@@ -134,7 +133,6 @@ public class GraphGenerator extends JFrame {
 			this.xPixel = xPixel;
 			this.yPixel = yPixel;
 		}
-		
 	}
 
 }

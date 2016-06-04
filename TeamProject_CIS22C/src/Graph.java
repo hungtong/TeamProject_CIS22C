@@ -192,25 +192,14 @@ public class Graph<E>
    //         adjacency list TO A TEXT FILE (SUGGEST TO PASS AN
    //        ALREADY OPEN PrintWriter TO THIS) !
    public void saveAsTextFile(PrintWriter writer) throws IOException {  
-	   BufferedWriter bufferedWriter = null;
-	   Iterator<Entry<E, Vertex<E>>> iter;
+	   BufferedWriter bufferedWriter = new BufferedWriter(writer);
+	   Iterator<Entry<E, Vertex<E>>> iter = vertexSet.entrySet().iterator();
 	   
-	   try {
-		   bufferedWriter = new BufferedWriter(writer);
-		   bufferedWriter.write("------------------------");
-		   bufferedWriter.newLine();
-	       iter = vertexSet.entrySet().iterator();
-	       while( iter.hasNext() ) {
-	    	   saveAdjacencyList(iter.next().getValue(), bufferedWriter);
-	       }
-	       writer.println();
-	   }
-       catch (IOException ex) {
-    	   
-       }
-	   finally {
-		   bufferedWriter.close();
-	   }
+       while( iter.hasNext() ) 
+    	   saveAdjacencyList(iter.next().getValue(), bufferedWriter);
+       
+	   bufferedWriter.close();
+	
    }
    
    private void saveAdjacencyList(Vertex<E> startVertex, BufferedWriter bufferedWriter) {
@@ -234,15 +223,10 @@ public class Graph<E>
 		   bufferedWriter.write("\n");;
 	   }
 	   catch (IOException ex) {
-		   
+		   System.out.println("Failed to save graph as text file");
 	   }
    }
-   
-   public void save() {
-	   
-	     
-   }
-   
+
    public void undoRemoval() {
 	   undoRemoval(1);
    }
