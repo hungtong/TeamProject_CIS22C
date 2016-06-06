@@ -1,6 +1,3 @@
-/**
- * Edge is the line to connect any two vertices. I WRITE IT BY MYSELF
- */
 public class Edge<E> implements Comparable< Edge<E> >
 {
 	 Vertex<E> source, dest;
@@ -16,6 +13,10 @@ public class Edge<E> implements Comparable< Edge<E> >
 	 public Edge( Vertex<E> src, Vertex<E> dst, Integer cst)
 	 {
 	    this (src, dst, cst.doubleValue());
+	 }
+	 
+	 public Edge(Vertex<E> src, Vertex<E> dst) {
+		 this (src, dst, 0);
 	 }
 	 
 	 public Edge()
