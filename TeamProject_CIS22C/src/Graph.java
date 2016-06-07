@@ -140,6 +140,8 @@ public class Graph<E> {
     public void depthFirstTraversalHelper(Vertex<E> startVertex, Visitor<E> visitor) {
     	// YOU COMPLETE THIS (USE THE ALGORITHM GIVEN FOR LESSON 11 EXERCISE)
     	startVertex.visit();
+    	visitor.visit(startVertex.getData());
+    	
     	Vertex<E> nextVertex = startVertex;
 	   
     	Iterator<Map.Entry<E, Pair<Vertex<E>, Double>>> iter = nextVertex.iterator(); // iterate adjacency list
@@ -150,6 +152,7 @@ public class Graph<E> {
     		if( !neighborVertex.isVisited() ) {
     			depthFirstTraversalHelper(neighborVertex, visitor);
     			neighborVertex.visit();
+    			visitor.visit(neighborVertex.getData());
     		}
     	}
     }
