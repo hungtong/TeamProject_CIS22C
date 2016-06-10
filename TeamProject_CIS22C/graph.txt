@@ -1,6 +1,0 @@
-San Jose_Davis,San Luis Obispo~
-Davis_San Jose,Santa Cruz,San Francisco,Los Angeles~
-Santa Cruz_Davis,San Francisco,Los Angeles,San Luis Obispo~
-San Francisco_Davis,Santa Cruz,Los Angeles,San Luis Obispo~
-Los Angeles_Davis,Santa Cruz,San Francisco,San Luis Obispo~
-San Luis Obispo_San Jose,Santa Cruz,San Francisco,Los Angeles~
