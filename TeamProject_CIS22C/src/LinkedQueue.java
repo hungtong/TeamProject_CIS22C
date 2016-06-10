@@ -7,7 +7,7 @@
 	//    and update the correct variable if so
 		Node newNode = new Node(newEntry);		if( count == 0 )			frontNode = newNode;		else			backNode.setNextNode(newNode);		backNode = newNode;
 		++count;
-		return true;	} // end enqueue	public T peekFront()	{		if (isEmpty())			return null;		else            return frontNode.getData();	} // end getFront	public T dequeue()	{	   T front = peekFront();       if( count > 0 )
+		return true;	} // end enqueue	public T peekFront()	{		if (isEmpty())			return null;		else            return frontNode.getData();	} // end getFront	public T peekBack() {		if (isEmpty())			return null;		else            return backNode.getData();	}		public T dequeue()	{	   T front = peekFront();       if( count > 0 )
        {	// ADD CODE TO remove data from linked list HERE!
 	// In addition to updating the backNode, also
 	//    make sure to check if the list becomes empty and
@@ -18,4 +18,4 @@
         }        return front;	} // end dequeue	public boolean isEmpty()	{		return count==0;	} // end isEmpty    public int size()
     {
         return count;
-    }     	private class Node	{		private T    data; // Entry in queue		private Node next; // Link to next node		private Node(T dataPortion)		{			data = dataPortion;			next = null;		} // end constructor		private Node(T dataPortion, Node linkPortion)		{			data = dataPortion;			next = linkPortion;		} // end constructor		private T getData()		{			return data;		} // end getData		@SuppressWarnings("unused")		private void setData(T newData)		{			data = newData;		} // end setData		private Node getNextNode()		{			return next;		} // end getNextNode		private void setNextNode(Node nextNode)		{			next = nextNode;		} // end setNextNode	} // end Node} // end Linkedqueue
+    }        public void display() {    	Node pointer = frontNode;    	    	while (pointer != backNode)    		System.out.print(pointer.getData() + " ");    }     	private class Node	{		private T    data; // Entry in queue		private Node next; // Link to next node		private Node(T dataPortion)		{			data = dataPortion;			next = null;		} // end constructor		private Node(T dataPortion, Node linkPortion)		{			data = dataPortion;			next = linkPortion;		} // end constructor		private T getData()		{			return data;		} // end getData		@SuppressWarnings("unused")		private void setData(T newData)		{			data = newData;		} // end setData		private Node getNextNode()		{			return next;		} // end getNextNode		private void setNextNode(Node nextNode)		{			next = nextNode;		} // end setNextNode	} // end Node} // end Linkedqueue

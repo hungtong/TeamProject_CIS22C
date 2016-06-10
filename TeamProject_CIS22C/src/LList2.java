@@ -1,3 +1,5 @@
+import javax.xml.soap.Node;
+
 /**
    A class that implements the ADT list by using a chain of DOUBLY
    linked nodes that has a head dummy reference and tail dummy reference.
@@ -69,13 +71,13 @@ public class LList2<T> implements ListInterface<T>
 		Node2 currentNode = firstDummyNode.getNextNode(); // FIXED FOR EX. 4.2
 		while (!found && (currentNode != lastDummyNode)) // FIXED FOR EX. 4.2
 		{
-		if (anEntry.equals(currentNode.getData()))
-		found = true;
-		else
-		{
-		//prevNode = currentNode; // FIXED FOR EX. 4.2
-		currentNode = currentNode.getNextNode();
-		}
+			if (anEntry.equals(currentNode.getData()))
+			found = true;
+			else
+			{
+				//prevNode = currentNode; // FIXED FOR EX. 4.2
+				currentNode = currentNode.getNextNode();
+			}
 		} // end while
 		if( !found )
 		return false;
@@ -153,13 +155,43 @@ public class LList2<T> implements ListInterface<T>
    public void display()
    {
 	   Node2 currNode;
-	   currNode = firstDummyNode.getNextNode();
-	   while( currNode != lastDummyNode ) 
+	   currNode = firstDummyNode.getNextNode(); // FIX FOR LAB EXERCISE 4.2
+	   while( currNode != lastDummyNode ) // FIX FOR LAB EXERCISE 4.2
 	   {
-	   System.out.println(currNode.getData());
-	   currNode = currNode.getNextNode();
+		   System.out.print(currNode.getData());
+		   currNode = currNode.getNextNode();
 	   }
     } // end display
+   
+   public void displayForward(Reconstructor<T> reconstructor) {   
+	   Node2 currentNode;
+	   currentNode = firstDummyNode.getNextNode(); 
+	   while( currentNode != lastDummyNode ) {
+		   System.out.print(currentNode.getData());
+		   Node2 nextNode = currentNode.getNextNode();
+		   
+		   if (nextNode != lastDummyNode) {
+			   System.out.print(" -> ");
+			   reconstructor.reconstruct(currentNode.getData(), nextNode.getData());
+		   }
+		   currentNode = nextNode;
+	   }
+    } // end display
+   
+   public void displayBackward(Reconstructor<T> reconstructor) {
+	   Node2 currentNode;
+	   currentNode = lastDummyNode.getPrevNode(); 
+	   while( currentNode != firstDummyNode ) {
+		   System.out.print(currentNode.getData());
+		   Node2 previousNode = currentNode.getPrevNode();
+		   
+		   if (previousNode != firstDummyNode) {
+			   System.out.print(" -> ");
+			   reconstructor.reconstruct(currentNode.getData(), previousNode.getData());
+		   }
+		   currentNode = previousNode;
+	   }
+   }
 
    // Initializes the class's data fields to indicate an empty list.
    private void initializeDataFields()

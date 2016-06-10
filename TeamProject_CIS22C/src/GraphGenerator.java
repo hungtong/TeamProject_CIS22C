@@ -72,19 +72,11 @@ public class GraphGenerator extends JFrame {
 				edgeDesination.xPixel,
 				edgeDesination.yPixel
 			);
-			
-			/* For Euler Circuit, we do not concern about cost nor distance between two vertices
-			 // draw a cost in the middle of the edge
-			graph.drawString(
-				String.valueOf(currentEdge.cost),
-				edgeSource.xPixel + Math.abs(edgeSource.xPixel - edgeDesination.xPixel) / 2,
-				edgeSource.yPixel + Math.abs(edgeSource.yPixel - edgeDesination.yPixel) / 2
-			);
-			*/
 		}
 		
 		int vertexWidth;
-		for (SimpleVertex currentVertex : vertices) {
+		for (int i = 0; i < vertices.size(); i++) {
+			SimpleVertex currentVertex = vertices.get(i);
 			vertexWidth = Math.max(width, fontMetrics.stringWidth(currentVertex.name) + width / 2);
 			
 			graph.setColor(Color.white);
@@ -109,6 +101,12 @@ public class GraphGenerator extends JFrame {
 				currentVertex.name,
 				currentVertex.xPixel - fontMetrics.stringWidth(currentVertex.name) / 2,
 				currentVertex.yPixel + fontMetrics.getHeight() / 2
+			);
+			
+			graph.drawString(
+				String.valueOf(i),
+				currentVertex.xPixel,
+				currentVertex.yPixel - 20
 			);
 		}
 	}

@@ -31,8 +31,6 @@ public class Graph<E> {
        addEdge(source, dest, (double)cost);
     }
    
-  
-
     // adds vertex with x in it, and always returns ref to it
     public Vertex<E> addToVertexSet(E x) {
        Vertex<E> retVal = null;
@@ -156,7 +154,7 @@ public class Graph<E> {
     		}
     	}
     }
-
+    
    // WRITE THE INSTANCE METHOD HERE TO
    //         WRITE THE GRAPH's vertices and its
    //         adjacency list TO A TEXT FILE (SUGGEST TO PASS AN
@@ -184,11 +182,7 @@ public class Graph<E> {
     		while( iter.hasNext() ) {
     			entry = iter.next();
     			pair = entry.getValue();
-    			bufferedWriter.write(
-    				pair.first.data + "("
-   					+ String.format("%3.1f", pair.second)
-   					+ ") " 
-    			);
+    			bufferedWriter.write(pair.first.data + " | ");
     		}
     		bufferedWriter.write("\n");;
     	}

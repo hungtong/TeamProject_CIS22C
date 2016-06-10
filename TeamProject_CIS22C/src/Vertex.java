@@ -63,8 +63,7 @@ public class Vertex<E>
 	         return (data.hashCode());
 	   }
 
-	   public void showAdjList()
-	   {
+	   public void showAdjList() {
 	      Iterator<Entry<E, Pair<Vertex<E>, Double>>> iter ;
 	      Entry<E, Pair<Vertex<E>, Double>> entry;
 	      Pair<Vertex<E>, Double> pair;
@@ -81,6 +80,10 @@ public class Vertex<E>
 	      }
 	      System.out.println();
 	   }
-   
+	   
+	   @Override
+	   public String toString() {
+		   return data.toString();
+	   }
 
 }
