@@ -1,0 +1,18 @@
+De Anza,Catholic Church,Memorial Park
+Memorial Park,De Anza,Staples,Whole Foods,Cupertino Historical Society
+Cupertino Historical Society,Memorial Park,Sushi Restaurant
+Catholic Church,Starbucks,De Anza,Staples,Whole Foods
+Whole Foods,Catholic Church,Memorial Park,Sheng Kee Bakery,Sushi Restaurant
+Sushi Restaurant,Cupertino Historical Society,Caffe Mac,Whole Foods,Pizza Hut
+Staples,UPS,Catholic Church,Sheng Kee Bakery,Memorial Park
+Sheng Kee Bakery,UPS,Whole Foods,Staples,Target,Bus Station,Caffe Mac
+Caffe Mac,Sheng Kee Bakery,Sushi Restaurant,Bus Station,Pizza Hut
+UPS,Staples,Sheng Kee Bakery,Target,Starbucks
+Target,UPS,Sheng Kee Bakery,Chase,Bus Station
+Bus Station,Target,Caffe Mac,Sheng Kee Bakery,Pizza Hut
+Starbucks,Catholic Church,Haircut,Chase,UPS
+Chase,Starbucks,Target,BOA,Pizza Hut
+Pizza Hut,BOA,Chase,Bus Station,Caffe Mac,Sushi Restaurant,Subway
+Haircut,Starbucks,BOA
+BOA,Haircut,Chase,Subway,Pizza Hut
+Subway,BOA,Pizza Hut

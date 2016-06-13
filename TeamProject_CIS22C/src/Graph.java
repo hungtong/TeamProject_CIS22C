@@ -136,29 +136,21 @@ public class Graph<E> {
     }
 
     public void depthFirstTraversalHelper(Vertex<E> startVertex, Visitor<E> visitor) {
-    	// YOU COMPLETE THIS (USE THE ALGORITHM GIVEN FOR LESSON 11 EXERCISE)
+
     	startVertex.visit();
-    	visitor.visit(startVertex.getData());
-    	
-    	Vertex<E> nextVertex = startVertex;
-	   
-    	Iterator<Map.Entry<E, Pair<Vertex<E>, Double>>> iter = nextVertex.iterator(); // iterate adjacency list
+    	visitor.visit(startVertex.getData());  
+    	Iterator<Map.Entry<E, Pair<Vertex<E>, Double>>> iter = startVertex.iterator(); // iterate adjacency list
 	 	   
     	while( iter.hasNext() ) {
     		Entry<E, Pair<Vertex<E>, Double>> nextEntry = iter.next();
     		Vertex<E> neighborVertex = nextEntry.getValue().first;
     		if( !neighborVertex.isVisited() ) {
     			depthFirstTraversalHelper(neighborVertex, visitor);
-    			neighborVertex.visit();
-    			visitor.visit(neighborVertex.getData());
     		}
     	}
     }
     
-   // WRITE THE INSTANCE METHOD HERE TO
-   //         WRITE THE GRAPH's vertices and its
-   //         adjacency list TO A TEXT FILE (SUGGEST TO PASS AN
-   //        ALREADY OPEN PrintWriter TO THIS) !
+  
     protected void saveAsTextFile(PrintWriter printWriter) throws IOException {  
     	BufferedWriter bufferedWriter = new BufferedWriter(printWriter);
     	Iterator<Entry<E, Vertex<E>>> iter = vertexSet.entrySet().iterator();
@@ -177,14 +169,18 @@ public class Graph<E> {
 	   
     	try {
     		bufferedWriter.newLine();
-    		bufferedWriter.write("Adj List for " + startVertex.getData() + ": ");
+    		bufferedWriter.write("+ Adjacency List for \"" + startVertex.getData() + "\":");
+    		bufferedWriter.newLine();
+    		bufferedWriter.write("\t");
     		iter = startVertex.adjList.entrySet().iterator();
     		while( iter.hasNext() ) {
     			entry = iter.next();
     			pair = entry.getValue();
-    			bufferedWriter.write(pair.first.data + " | ");
+    			bufferedWriter.write(pair.first.data + "");
+  		        if (iter.hasNext())
+  		        	bufferedWriter.write("  ->  ");
     		}
-    		bufferedWriter.write("\n");;
+    		bufferedWriter.newLine();
     	}
     	catch (IOException ex) {
     		System.out.println("Failed to save graph as text file");

@@ -1,0 +1,14 @@
+Bus Station,Visual & Performing Arts Center,L Quad
+L Quad,Multicultural Center,Administration,Bus Station,Learning Center West
+Visual & Performing Arts Center,A Quad,Multicultural Center,Bus Station,Flint Center
+Multicultural Center,Visual & Performing Arts Center,Advanced Technology Center,Campus Center,L Quad
+Advanced Technology Center,A Quad,Garden,Multicultural Center,Campus Center
+Campus Center,Multicultural Center,Advanced Technology Center,Library,Administration
+Administration,Library,Campus Center,Learning Center West,L Quad
+Library,California History Center,Garden,Campus Center,Administration
+Garden,California History Center,Library,Advanced Technology Center,A Quad
+A Quad,Garden,Advanced Technology Center,Visual & Performing Arts Center,Flint Center
+Flint Center,Visual & Performing Arts Center,A Quad,Media & Learning Center,California History Center
+Learning Center West,Media & Learning Center,California History Center,Administration,L Quad
+California History Center,Flint Center,Learning Center West,Garden,Library
+Media & Learning Center,Flint Center,Learning Center West

@@ -1,5 +1,3 @@
-import javax.xml.soap.Node;
-
 /**
    A class that implements the ADT list by using a chain of DOUBLY
    linked nodes that has a head dummy reference and tail dummy reference.
@@ -11,9 +9,9 @@ import javax.xml.soap.Node;
 */
 public class LList2<T> implements ListInterface<T>
 {
-	private Node2 firstDummyNode;            // Reference to first node of chain
-	private Node2 lastDummyNode;
-	private int  numberOfEntries;
+	protected Node2 firstDummyNode;            // Reference to first node of chain
+	protected Node2 lastDummyNode;
+	protected int  numberOfEntries;
 
 	public LList2()
 	{
@@ -65,32 +63,31 @@ public class LList2<T> implements ListInterface<T>
             return false;
    } // end add
 
-	public boolean remove(T anEntry)// ***************YOU WRITE**************
+	public boolean remove(T anEntry)
 	{
 		boolean found = false;
-		Node2 currentNode = firstDummyNode.getNextNode(); // FIXED FOR EX. 4.2
-		while (!found && (currentNode != lastDummyNode)) // FIXED FOR EX. 4.2
+		Node2 currentNode = firstDummyNode.getNextNode(); 
+		while (!found && (currentNode != lastDummyNode)) 
 		{
 			if (anEntry.equals(currentNode.getData()))
 			found = true;
 			else
 			{
-				//prevNode = currentNode; // FIXED FOR EX. 4.2
+				//prevNode = currentNode; 
 				currentNode = currentNode.getNextNode();
 			}
 		} // end while
 		if( !found )
 		return false;
 		// must be found here, get following node and update
-		Node2 nextNode = currentNode.getNextNode(); // FIXED FOR EX. 4.2
-		Node2 prevNode = currentNode.getPrevNode(); // FIXED FOR EX. 4.2
-		nextNode.setPrevNode(prevNode); // FIXED FOR EX. 4.2
-		prevNode.setNextNode(nextNode); // UPDATED FOR EX. 4.2
+		Node2 nextNode = currentNode.getNextNode(); 
+		Node2 prevNode = currentNode.getPrevNode(); 
+		nextNode.setPrevNode(prevNode); 
+		prevNode.setNextNode(nextNode);
 		--numberOfEntries;
 		return true;
 
 	}
-
 
 	public T remove(int givenPosition)
 	{
@@ -116,8 +113,7 @@ public class LList2<T> implements ListInterface<T>
 
    public T getEntry(int givenPosition)
    {
-		if ((givenPosition >= 1) && (givenPosition <= numberOfEntries))
-		{
+		if ((givenPosition >= 1) && (givenPosition <= numberOfEntries)) {
             return getNodeAt(givenPosition).getData();
      	}
         else
@@ -155,46 +151,16 @@ public class LList2<T> implements ListInterface<T>
    public void display()
    {
 	   Node2 currNode;
-	   currNode = firstDummyNode.getNextNode(); // FIX FOR LAB EXERCISE 4.2
-	   while( currNode != lastDummyNode ) // FIX FOR LAB EXERCISE 4.2
+	   currNode = firstDummyNode.getNextNode(); 
+	   while( currNode != lastDummyNode )
 	   {
 		   System.out.print(currNode.getData());
 		   currNode = currNode.getNextNode();
 	   }
     } // end display
-   
-   public void displayForward(Reconstructor<T> reconstructor) {   
-	   Node2 currentNode;
-	   currentNode = firstDummyNode.getNextNode(); 
-	   while( currentNode != lastDummyNode ) {
-		   System.out.print(currentNode.getData());
-		   Node2 nextNode = currentNode.getNextNode();
-		   
-		   if (nextNode != lastDummyNode) {
-			   System.out.print(" -> ");
-			   reconstructor.reconstruct(currentNode.getData(), nextNode.getData());
-		   }
-		   currentNode = nextNode;
-	   }
-    } // end display
-   
-   public void displayBackward(Reconstructor<T> reconstructor) {
-	   Node2 currentNode;
-	   currentNode = lastDummyNode.getPrevNode(); 
-	   while( currentNode != firstDummyNode ) {
-		   System.out.print(currentNode.getData());
-		   Node2 previousNode = currentNode.getPrevNode();
-		   
-		   if (previousNode != firstDummyNode) {
-			   System.out.print(" -> ");
-			   reconstructor.reconstruct(currentNode.getData(), previousNode.getData());
-		   }
-		   currentNode = previousNode;
-	   }
-   }
-
+     
    // Initializes the class's data fields to indicate an empty list.
-   private void initializeDataFields()
+   protected void initializeDataFields()
    {
 		firstDummyNode.setNextNode(lastDummyNode);
 		lastDummyNode.setPrevNode(firstDummyNode);
@@ -207,10 +173,15 @@ public class LList2<T> implements ListInterface<T>
    // Returns a reference to the node at a given position.
    // Precondition: The chain is not empty;
    //               1 <= givenPosition <= numberOfEntries.
-	private Node2 getNodeAt(int givenPosition)
+	protected Node2 getNodeAt(int givenPosition)
 	{
-		if((1 <= givenPosition) && (givenPosition <= numberOfEntries))
-		{
+		if((1 <= givenPosition) && (givenPosition <= numberOfEntries)) {
+			if (givenPosition == 1)
+				return firstDummyNode.getNextNode();
+			
+			if (givenPosition == numberOfEntries)
+				return lastDummyNode.getPrevNode();
+			
             Node2 currentNode = firstDummyNode.getNextNode();
 
             // Traverse the chain to locate the desired node
@@ -224,53 +195,51 @@ public class LList2<T> implements ListInterface<T>
             return null;
 	} // end getNodeAt
 
-	private class Node2
-	{
-      private T    data; // Entry in list
-      private Node2 next; // Link to next Node2
-      private Node2 prev; // Link to previous Node2
+	protected class Node2 {
+      protected T    data; // Entry in list
+      protected Node2 next; // Link to next Node2
+      protected Node2 prev; // Link to previous Node2
 
-      private Node2(T dataPortion)
+      protected Node2(T dataPortion)
       {
          data = dataPortion;
          next = null;
          prev = null;
       } // end constructor
 
-      private Node2(T dataPortion, Node2 nextNode)
+      protected Node2(T dataPortion, Node2 nextNode)
       {
          data = dataPortion;
          next = nextNode;
          prev = null;
       } // end constructor
 
-      private T getData()
+      protected T getData()
       {
          return data;
       } // end getData
 
-      @SuppressWarnings("unused")
-      private void setData(T newData)
+      protected void setData(T newData)
       {
          data = newData;
       } // end setData
 
-      private Node2 getNextNode()
+      protected Node2 getNextNode()
       {
          return next;
       } // end getNextNode
 
-      private void setNextNode(Node2 nextNode)
+      protected void setNextNode(Node2 nextNode)
       {
          next = nextNode;
       } // end setNextNode
 
-      private Node2 getPrevNode()
+      protected Node2 getPrevNode()
       {
          return prev;
       } // end getNextNode
 
-      private void setPrevNode(Node2 prevNode)
+      protected void setPrevNode(Node2 prevNode)
       {
          prev = prevNode;
       } // end setNextNode

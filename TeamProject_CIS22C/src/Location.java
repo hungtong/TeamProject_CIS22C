@@ -5,6 +5,10 @@ public class Location {
 		setName(name);
 	}
 	
+	public Location() {
+		this("");
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -28,11 +32,10 @@ public class Location {
 	
 	@Override
 	public int hashCode() {
-		int returnValue = 0;
-
+		int hashCode = 0;
 	    for(int k = 0; k < name.length(); k++ )
-	    	returnValue = 37 * returnValue + name.charAt(k);
-
-	    return returnValue;
-	}
+	    	hashCode = 37 * hashCode + name.charAt(k);
+	    
+	    return hashCode;
+	} 
 }

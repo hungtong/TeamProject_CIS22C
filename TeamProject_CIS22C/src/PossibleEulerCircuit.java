@@ -5,55 +5,63 @@ import java.util.Map.Entry;
 
 public class PossibleEulerCircuit<E> extends Graph<E> {	
 	
-	private Visitor<E> visitor;
 	private Boolean isEulerCiruit;
 	private LinkedStack<Pair<E, E>> removedEdges;
 	
-	public PossibleEulerCircuit(Visitor<E> visitor) {
-		this.visitor = visitor;
+	public PossibleEulerCircuit() {
 		isEulerCiruit = null;
 		removedEdges = new LinkedStack<>();
 	}
-	
-	public void addEdge(E source, E dest) {
-	    super.addEdge(source, dest, 0);
-    }
 	
 	/*
 		Check if the graph is connected or not
 		@return true if ALL non-isolated vertices construct only one graph
 	*/
 	public boolean isConnected() {
+		if (vertexSet.size() == 0) {
+			System.out.println("This Graph has no vertices");
+			return false;
+		}
+		
 		// the first step is actually marking unvisited all vertices. However, in our Graph class, when calling
 		// Depth First Traversal, it automatically do that for us
 		
 		// Find a non-zero-degree vertex
 		Iterator<Map.Entry<E, Vertex<E>>> iterator = vertexSet.entrySet().iterator();
+		int adjacencyListSize = 0;
 		while (iterator.hasNext()) {
 			Vertex<E> currentVertex = iterator.next().getValue();
-			if (currentVertex.adjList.size() > 0)
+			adjacencyListSize = currentVertex.adjList.size();
+			if (adjacencyListSize > 0)
 				break;
 		}
 		
 		// The objective is to check if all non-isolated vertices connected, if there was no non-isolated vertex, 
 		// every vertex would be considered as connected
-		if (iterator.hasNext() == false)
+		if (adjacencyListSize == 0) {
+			System.out.println("This Graph is Euler Circuit because it has no non-isolated vertex");
 			return true;
+		}
 		
 		// Choose a random vertex Visit all vertices using Depth First Traversal
 		Random randomGenerator = new Random();
 		Object[] vertices = vertexSet.values().toArray();
 		@SuppressWarnings("unchecked")
-		Vertex<E> randomVertex = ( Vertex<E> ) vertices[randomGenerator.nextInt(vertices.length)];
-		depthFirstTraversal(randomVertex.data);
+		Vertex<E> startVertex = ( Vertex<E> ) vertices[randomGenerator.nextInt(vertices.length)];
+		depthFirstTraversal(startVertex.data);
 		
 		// If there was a non-isolated vertex unvisited, the graph is not connected at all
 		// We only one graph with our set of vertices
 		iterator = vertexSet.entrySet().iterator();	// reset iterator
 		while (iterator.hasNext()) {
 			Vertex<E> currentVertex = iterator.next().getValue();
-			if (currentVertex.adjList.size() > 0 && !currentVertex.isVisited())
+			if (currentVertex.adjList.size() > 0 && !currentVertex.isVisited()) {
+				System.out.println(
+					"The Graph cannot be Euler Circuit because it is not connected!\n" +
+					"A bridge is necessary at " + currentVertex
+				);
 				return false;
+			}
 		}
 		
 		return true;
@@ -68,8 +76,13 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		Iterator<Map.Entry<E, Vertex<E>>> iterator = vertexSet.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Vertex<E> currentVertex = iterator.next().getValue();
-			if (currentVertex.adjList.size() % 2 != 0)
+			if (currentVertex.adjList.size() % 2 != 0) {
+				System.out.println(
+						"The Graph cannot be Euler Circuit because\n" +
+						currentVertex + " has a degree of " + currentVertex.adjList.size() + " (odd number)"
+					);
 				return false;
+			}
 		}
 		
 		return true;
@@ -83,7 +96,7 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		if (isEulerCiruit == null) {
 			isEulerCiruit = new Boolean(hasAllEvenDegreeVertices() && isConnected());
 		}
-		return isEulerCiruit;
+		return isEulerCiruit.booleanValue();
 	}
 
 	/*
@@ -91,15 +104,22 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		Notice that we can start from any vertex
 		@param startVertex - given starting vertex
 	*/
-	public void findEulerCircuit(Vertex<E> randomVertex) {
+	public <T> void findEulerCircuit(Vertex<E> startVertex) {
 		if (isEulerCircuit()) {
 
 			LinkedStack<Vertex<E>> simpleCycle = new LinkedStack<>();
 			
-			LList2<Vertex<E>> eulerCircuit = new LList2<>();
+			SimpleCircuit<Vertex<E>> eulerCircuit = new SimpleCircuit<>(new CircuitStrategy<Vertex<E>>() {
+
+				@Override
+				public void implement(Vertex<E> firstNode, Vertex<E> secondNode) {
+					addEdge(firstNode.getData(), secondNode.getData(), 0);				
+				}
+			});
 			
-			simpleCycle.push(randomVertex);
-			Vertex<E> currentVertex = randomVertex;
+					
+			simpleCycle.push(startVertex);
+			Vertex<E> currentVertex = startVertex;
 			while (!simpleCycle.isEmpty()) {
 				Vertex<E> nextVertex = getNextVertex(currentVertex);
 				if (currentVertex == nextVertex) {
@@ -113,18 +133,14 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 				}
 				currentVertex = simpleCycle.peek();
 			}
+						
+			eulerCircuit.traverseCircuit();
 			
-			Reconstructor<Vertex<E>> reconstructor = new Reconstructor<Vertex<E>>() {
-
-				@Override
-				public void reconstruct(Vertex<E> source, Vertex<E> destination) {
-					addEdge(source.getData(), destination.getData());					
-				}
-				
-			};
-			eulerCircuit.displayForward(reconstructor);
-			System.out.println();
-			eulerCircuit.displayBackward(reconstructor);
+			System.out.println("\n\t-----------------------------------------------------");
+			System.out.println("\tONE EULER CIRCUIT STARTING AT " + startVertex.data + " IS");
+			eulerCircuit.displayForward();
+			System.out.println("\n\n\tOr");
+			eulerCircuit.displayBackward();
 		}
 	}
 		
@@ -161,7 +177,7 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 
 		   while (times > 0) {
 			   currentEdge = removedEdges.pop();
-			   addEdge(currentEdge.first, currentEdge.second);
+			   addEdge(currentEdge.first, currentEdge.second, 0);
 			   --times;
 		   }	   	   
 	   }
@@ -200,20 +216,43 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
    }
 
    private void depthFirstTraversalHelper(Vertex<E> startVertex) {
-   		startVertex.visit();
-   	
-   		Vertex<E> nextVertex = startVertex;
-	   
-   		Iterator<Map.Entry<E, Pair<Vertex<E>, Double>>> iter = nextVertex.iterator(); // iterate adjacency list
-	 	   
-   		while( iter.hasNext() ) {
-   			Entry<E, Pair<Vertex<E>, Double>> nextEntry = iter.next();
-   			Vertex<E> neighborVertex = nextEntry.getValue().first;
-   			if( !neighborVertex.isVisited() ) {
-   				depthFirstTraversalHelper(neighborVertex);
-   				neighborVertex.visit();
-      		}
-   		}
+	   startVertex.visit();
+	   Iterator<Map.Entry<E, Pair<Vertex<E>, Double>>> iter = startVertex.iterator(); // iterate adjacency list
+ 	   
+	   while( iter.hasNext() ) {
+		   Entry<E, Pair<Vertex<E>, Double>> nextEntry = iter.next();
+	   	   Vertex<E> neighborVertex = nextEntry.getValue().first;
+	   	   if( !neighborVertex.isVisited() ) {
+	   		   depthFirstTraversalHelper(neighborVertex);
+	   	   }
+	   }
+   }
+   
+   @Override
+   public void showAdjTable() {
+	   Iterator<Entry<E, Vertex<E>>> vertexIterator;
+	
+	   System.out.println( "\n\n-------------------------------------------------- ");
+	   vertexIterator = vertexSet.entrySet().iterator();
+	   while( vertexIterator.hasNext() ) {
+		   Vertex<E> currentVertex = vertexIterator.next().getValue();
+		   
+		   Iterator<Entry<E, Pair<Vertex<E>, Double>>> adjacencyListIterator ;
+		   Entry<E, Pair<Vertex<E>, Double>> entry;
+		   Pair<Vertex<E>, Double> pair;
+
+		   System.out.print("+ Adjacency List for \"" + currentVertex.getData() + "\":\n\t");
+		   adjacencyListIterator = currentVertex.adjList.entrySet().iterator();
+		   while( adjacencyListIterator.hasNext() ) {
+		       entry = adjacencyListIterator.next();
+		       pair = entry.getValue();
+		       System.out.print( pair.first.data);
+		       if (adjacencyListIterator.hasNext())
+		    	   System.out.print("  ->  ");
+		   }
+		   System.out.println();
+	   }
+	   System.out.println();
    }
 
 }
