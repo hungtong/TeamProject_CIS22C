@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 public class PossibleEulerCircuit<E> extends Graph<E> {	
 	
 	private SimpleCircuit<Vertex<E>> eulerCircuit;
+	private LinkedStack<Pair<E, E>> removedEdges;
 	
 	public PossibleEulerCircuit() {
 		removedEdges = new LinkedStack<>();
@@ -206,5 +207,55 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 	   }
 	   System.out.println();
    }
+   
 
+   @Override
+   public boolean remove(E start, E end) {
+   	Vertex<E> startVertex = vertexSet.get(start);
+	   boolean removedOK = false;
+
+	   if( startVertex != null )
+	   {
+		   Pair<Vertex<E>, Double> endPair = startVertex.adjList.remove(end);
+		   removedOK = endPair!=null;
+	   }
+		Vertex<E> endVertex = vertexSet.get(end);
+		if( endVertex != null )
+		{
+			Pair<Vertex<E>, Double> startPair = endVertex.adjList.remove(start);
+			removedOK = startPair!=null ;
+		}
+
+		if (removedOK) 
+			removedEdges.push(new Pair<E, E>(start, end));
+	   return removedOK;
+   }
+   
+   protected void undoRemoval() {
+   	undoRemoval(1);
+   }
+
+   protected void undoRemoval(int times) {
+   	if (removedEdges.size() == 0) {
+   		System.out.println("\tThere Is Nothing To Undo");
+   		return;
+   	}
+
+   	if (times < 1) {
+   		System.out.println("\tNumber of Undos Cannot Be Less Than 1");
+   		return;
+   	}
+
+	    Pair<E,E> currentEdge;
+
+	    if (times >= removedEdges.size())
+		    times = removedEdges.size();
+
+	    while (times > 0) {
+		    currentEdge = removedEdges.pop();
+		    addEdge(currentEdge.first, currentEdge.second, 0);
+		    System.out.println("\tSuccessfully Undid Edge Removal Between " + currentEdge.first + " And " + currentEdge.second);
+		    --times;
+	    }	   	   
+  }  
 }
