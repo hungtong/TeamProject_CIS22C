@@ -75,7 +75,7 @@ public class Driver {
 			System.out.println("\t\t2. Add Edge");
 			System.out.println("\t\t3. Remove Edge");
 			System.out.println("\t\t4. Undo Removal");
-			System.out.println("\t\t5. Diplay Graph");
+			System.out.println("\t\t5. Display Graph");
 			System.out.println("\t\t6. Depth First Traversal");
 			System.out.println("\t\t7. Breadth First Traversal");
 			System.out.println("\t\t8. Find Euler Circuit");
@@ -119,42 +119,42 @@ public class Driver {
 	        case 2:
 	        	if (possibleEulerCircuit != null)
 	        		addingEdge();
-	        	else System.out.println("You have to read input file first: ");
+	        	else System.out.println("\tYou have to read input file first");
 	        	break;
 	        case 3:  
 	        	if (possibleEulerCircuit != null)
 	        		removingEdge(); 
-	        	else System.out.println("You have to read input file first: ");
+	        	else System.out.println("\tYou have to read input file first");
 	        	break;
 	        case 4:
 	        	if (possibleEulerCircuit != null)
 	        		undoRemovingEdge();
-	        	else System.out.println("You have to read input file first: ");
+	        	else System.out.println("\tYou have to read input file first");
 	        	break;
 	        case 5:  
 	        	if (possibleEulerCircuit != null)
 	        		displayingGraph();
-	        	else System.out.println("You have to read input file first: ");
+	        	else System.out.println("\tYou have to read input file first");
 	        	break;
 	        case 6:  
 	        	if (possibleEulerCircuit != null)
 	        		depthFirstTraversal();
-	        	else System.out.println("You have to read input file first: ");
+	        	else System.out.println("\tYou have to read input file first");
 	        	break;
 	        case 7:
 	        	if (possibleEulerCircuit != null)
 	        		breadthFirstTraversal();
-	        	else System.out.println("You have to read input file first: ");
+	        	else System.out.println("\tYou have to read input file first");
 	        	break;
 	        case 8:  
 	        	if (possibleEulerCircuit != null)
 	        		findingEulerCircuit();
-	        	else System.out.println("You have to read input file first: ");
+	        	else System.out.println("\tYou have to read input file first");
 	        	break;
 	        case 9:  
 	        	if (possibleEulerCircuit != null)
 	        		saveCircuitAsTextFile();
-	        	else System.out.println("You have to read input file first: ");
+	        	else System.out.println("\tYou have to read input file first");
 	        	break;
 	        case 10:  
 	        	System.out.println("\tThank You For Using The Program");
