@@ -16,17 +16,12 @@ public class Driver {
 	private static Visitor<Location> locationVisitor = new LocationVisitor();
 		
 	public static void main(String[] args) throws IOException {
-		
-		possibleEulerCircuit = new PossibleEulerCircuit<>();
-		availableLocations = readInputFile();
-
 		int userChoice = 0;
-		while (userChoice != 9) {
+		while (userChoice != 10) {
 			userChoice = showMenu();
 			navigateOption(userChoice);
 			System.in.read();
 		}
-			   		
 	}
 	
 	public static HashMap<String, Location> readInputFile() {
@@ -76,15 +71,16 @@ public class Driver {
 			System.out.println("\n\t-----------------------------------------------------");
 			
 			System.out.println("\tType A Number To Go To The Option");
-			System.out.println("\t\t1. Add Edge");
-			System.out.println("\t\t2. Remove Edge");
-			System.out.println("\t\t3. Undo Removal");
-			System.out.println("\t\t4. Diplay Graph");
-			System.out.println("\t\t5. Depth First Traversal");
-			System.out.println("\t\t6. Breadth First Traversal");
-			System.out.println("\t\t7. Find Euler Circuit");
-			System.out.println("\t\t8. Save as Text File");
-			System.out.println("\t\t9. Exit");
+			System.out.println("\t\t1. Read Input File");
+			System.out.println("\t\t2. Add Edge");
+			System.out.println("\t\t3. Remove Edge");
+			System.out.println("\t\t4. Undo Removal");
+			System.out.println("\t\t5. Diplay Graph");
+			System.out.println("\t\t6. Depth First Traversal");
+			System.out.println("\t\t7. Breadth First Traversal");
+			System.out.println("\t\t8. Find Euler Circuit");
+			System.out.println("\t\t9. Save as Text File");
+			System.out.println("\t\t10. Exit");
 			
 			System.out.println();
 			
@@ -95,7 +91,7 @@ public class Driver {
 				int userChoice = userScanner.nextInt();
 				
 				
-				if (userChoice < 1 || userChoice > 9) 
+				if (userChoice < 1 || userChoice > 10) 
 					System.out.println("\n\tInvalid Number! Please Type Another Number.");
 				else 
 					return userChoice;
@@ -115,31 +111,52 @@ public class Driver {
 	
 	public static void navigateOption(int option) throws IOException {
 		switch (option) {
-	        case 1:  
-	        	addingEdge();
-	        	break;
-	        case 2:  
-	        	removingEdge(); 
+			case 1:
+				possibleEulerCircuit = new PossibleEulerCircuit<>();
+				userScanner.nextLine();
+				availableLocations = readInputFile();
+				break;
+	        case 2:
+	        	if (possibleEulerCircuit != null)
+	        		addingEdge();
+	        	else System.out.println("You have to read input file first: ");
 	        	break;
 	        case 3:  
-	        	undoRemovingEdge();
+	        	if (possibleEulerCircuit != null)
+	        		removingEdge(); 
+	        	else System.out.println("You have to read input file first: ");
 	        	break;
-	        case 4:  
-	        	displayingGraph();
+	        case 4:
+	        	if (possibleEulerCircuit != null)
+	        		undoRemovingEdge();
+	        	else System.out.println("You have to read input file first: ");
 	        	break;
 	        case 5:  
-	        	depthFirstTraversal();
+	        	if (possibleEulerCircuit != null)
+	        		displayingGraph();
+	        	else System.out.println("You have to read input file first: ");
 	        	break;
-	        case 6:
-	        	breadthFirstTraversal();
+	        case 6:  
+	        	if (possibleEulerCircuit != null)
+	        		depthFirstTraversal();
+	        	else System.out.println("You have to read input file first: ");
 	        	break;
-	        case 7:  
-	        	findingEulerCircuit();
+	        case 7:
+	        	if (possibleEulerCircuit != null)
+	        		breadthFirstTraversal();
+	        	else System.out.println("You have to read input file first: ");
 	        	break;
 	        case 8:  
-	        	saveCircuitAsTextFile();
+	        	if (possibleEulerCircuit != null)
+	        		findingEulerCircuit();
+	        	else System.out.println("You have to read input file first: ");
 	        	break;
 	        case 9:  
+	        	if (possibleEulerCircuit != null)
+	        		saveCircuitAsTextFile();
+	        	else System.out.println("You have to read input file first: ");
+	        	break;
+	        case 10:  
 	        	System.out.println("\tThank You For Using The Program");
 	        	break;
 		}
