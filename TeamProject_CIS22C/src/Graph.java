@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 //--- Graph class ------------------------------------------------------
 public class Graph<E> {
 	
+	protected LinkedStack<Pair<E, E>> removedEdges;
+	
 	// the graph data is all here --------------------------
 	protected HashMap<E, Vertex<E> > vertexSet;
 
@@ -186,6 +188,34 @@ public class Graph<E> {
     		System.out.println("Failed to save graph as text file");
     	}
     }
+    
+    protected void undoRemoval() {
+    	undoRemoval(1);
+    }
+
+    protected void undoRemoval(int times) {
+    	if (removedEdges.size() == 0) {
+    		System.out.println("\tThere Is Nothing To Undo");
+    		return;
+    	}
+
+    	if (times < 1) {
+    		System.out.println("\tNumber of Undos Cannot Be Less Than 1");
+    		return;
+    	}
+
+	    Pair<E,E> currentEdge;
+
+	    if (times >= removedEdges.size())
+		    times = removedEdges.size();
+
+	    while (times > 0) {
+		    currentEdge = removedEdges.pop();
+		    addEdge(currentEdge.first, currentEdge.second, 0);
+		    System.out.println("\tSuccessfully Undid Edge Removal Between " + currentEdge.first + " And " + currentEdge.second);
+		    --times;
+	    }	   	   
+   }  
 
     
 }

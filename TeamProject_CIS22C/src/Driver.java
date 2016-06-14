@@ -279,14 +279,17 @@ public class Driver {
 		System.out.println("\t-----------------------------------------------------");
 		System.out.println("\t\tFind Euler Circuit\n");
 		
+		userScanner.nextLine();
+		
 		if (possibleEulerCircuit.isEulerCircuit()) {
 			Iterator<Entry<Location, Vertex<Location>>> iter = possibleEulerCircuit.vertexSet.entrySet().iterator();
-			
+		
 			while (iter.hasNext()) {
 				Entry<Location, Vertex<Location>> entry = iter.next();
 				possibleEulerCircuit.findEulerCircuit(entry.getValue());
 			}
-		
+			
+
 		}
 	}
 	

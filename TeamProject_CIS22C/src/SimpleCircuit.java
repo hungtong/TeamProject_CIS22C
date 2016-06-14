@@ -1,11 +1,6 @@
 public class SimpleCircuit<T> extends LList2<T> {
-	private CircuitStrategy<T> strategy;
-	
-	public SimpleCircuit(CircuitStrategy<T> strategy) {
-		this.strategy = strategy;
-	}
-
-	public void traverseCircuit() {
+		
+	public void traverseCircuit(CircuitStrategy<T> strategy) {
 	    Node2 currentNode;
 	    currentNode = firstDummyNode.getNextNode(); 
 	    while( currentNode != lastDummyNode ) {

@@ -5,10 +5,11 @@ import java.util.Map.Entry;
 
 public class PossibleEulerCircuit<E> extends Graph<E> {	
 	
-	private LinkedStack<Pair<E, E>> removedEdges;
+	private SimpleCircuit<Vertex<E>> eulerCircuit;
 	
 	public PossibleEulerCircuit() {
 		removedEdges = new LinkedStack<>();
+		eulerCircuit = new SimpleCircuit<>();
 	}
 	
 	/*
@@ -102,15 +103,6 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 	public <T> void findEulerCircuit(Vertex<E> startVertex) {
 		LinkedStack<Vertex<E>> simpleCycle = new LinkedStack<>();
 		
-		SimpleCircuit<Vertex<E>> eulerCircuit = new SimpleCircuit<>(new CircuitStrategy<Vertex<E>>() {
-
-			@Override
-			public void implement(Vertex<E> firstNode, Vertex<E> secondNode) {
-				addEdge(firstNode.getData(), secondNode.getData(), 0);				
-			}
-		});
-		
-				
 		simpleCycle.push(startVertex);
 		Vertex<E> currentVertex = startVertex;
 		while (!simpleCycle.isEmpty()) {
@@ -127,7 +119,17 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 			currentVertex = simpleCycle.peek();
 		}
 					
-		eulerCircuit.traverseCircuit();
+		displayEulerCircuit(startVertex);
+	}
+	
+	private void displayEulerCircuit(Vertex<E> startVertex) {
+		eulerCircuit.traverseCircuit(new CircuitStrategy<Vertex<E>>() {
+
+			@Override
+			public void implement(Vertex<E> firstNode, Vertex<E> secondNode) {
+				addEdge(firstNode.getData(), secondNode.getData(), 0);				
+			}
+		});
 		
 		System.out.println("\n\t-------------------------------------------------------------------------------");
 		System.out.println("\tONE EULER CIRCUIT STARTING AT \"" + startVertex.data + "\" IS");
@@ -156,49 +158,7 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		}
 	}
 	
-	protected void undoRemoval() {
-    	undoRemoval(1);
-    }
-
-    protected void undoRemoval(int times) {
-	   if (times > 0 && removedEdges.size() > 0) {
-		   Pair<E,E> currentEdge;
-
-		   if (times >= removedEdges.size())
-			   times = removedEdges.size();
-
-		   while (times > 0) {
-			   currentEdge = removedEdges.pop();
-			   addEdge(currentEdge.first, currentEdge.second, 0);
-			   System.out.println("\tSuccessfully Undid Edge Removal Between " + currentEdge.first + " And " + currentEdge.second);
-			   --times;
-		   }	   	   
-	   }
-   } 
-    
-   @Override
-   public boolean remove(E start, E end) {
-	    Vertex<E> startVertex = vertexSet.get(start);
-	    boolean removedOK = false;
-
-	    if( startVertex != null ) {
-		    Pair<Vertex<E>, Double> endPair = startVertex.adjList.remove(end);
-		    removedOK = endPair != null;
-	    }
-	   
-	    // Undirected Graph so we remove the other way as well
-		Vertex<E> endVertex = vertexSet.get(end);
-		if( endVertex != null ) {
-			Pair<Vertex<E>, Double> startPair = endVertex.adjList.remove(start);
-			removedOK = startPair != null;
-		}
-		
-		if (removedOK) 
-			removedEdges.push(new Pair<E, E>(start, end));
-		
-	    return removedOK;
-   }
-   
+	
 
    /** Depth-first traversal from the parameter startElement */
    private void depthFirstTraversal(E startElement) {
