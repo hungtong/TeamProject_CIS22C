@@ -21,7 +21,7 @@ public class Driver {
 		availableLocations = readInputFile();
 
 		int userChoice = 0;
-		while (userChoice != 8) {
+		while (userChoice != 9) {
 			userChoice = showMenu();
 			navigateOption(userChoice);
 			System.in.read();
@@ -80,10 +80,11 @@ public class Driver {
 			System.out.println("\t\t2. Remove Edge");
 			System.out.println("\t\t3. Undo Removal");
 			System.out.println("\t\t4. Diplay Graph");
-			System.out.println("\t\t5. Demonstrate Traversal");
-			System.out.println("\t\t6. Solve Problem");
-			System.out.println("\t\t7. Save as Text File");
-			System.out.println("\t\t8. Exit");
+			System.out.println("\t\t5. Depth First Traversal");
+			System.out.println("\t\t6. Breadth First Traversal");
+			System.out.println("\t\t7. Find Euler Circuit");
+			System.out.println("\t\t8. Save as Text File");
+			System.out.println("\t\t9. Exit");
 			
 			System.out.println();
 			
@@ -94,7 +95,7 @@ public class Driver {
 				int userChoice = userScanner.nextInt();
 				
 				
-				if (userChoice < 1 || userChoice > 8) 
+				if (userChoice < 1 || userChoice > 9) 
 					System.out.println("\n\tInvalid Number! Please Type Another Number.");
 				else 
 					return userChoice;
@@ -127,15 +128,18 @@ public class Driver {
 	        	displayingGraph();
 	        	break;
 	        case 5:  
-	        	displayingGraph();
+	        	depthFirstTraversal();
 	        	break;
-	        case 6:  
-	        	findingEulerCircuit();
+	        case 6:
+	        	breadthFirstTraversal();
 	        	break;
 	        case 7:  
-	        	saveCircuitAsTextFile();
+	        	findingEulerCircuit();
 	        	break;
 	        case 8:  
+	        	saveCircuitAsTextFile();
+	        	break;
+	        case 9:  
 	        	System.out.println("\tThank You For Using The Program");
 	        	break;
 		}
@@ -237,7 +241,7 @@ public class Driver {
 		
 	}
 	
-	public static void demonstrateTraversal() {
+	public static void depthFirstTraversal() {
 		System.out.println("\t-----------------------------------------------------");
 		System.out.println("\t\tDemonstrate Traversal\n");
 		
@@ -251,9 +255,23 @@ public class Driver {
 			possibleEulerCircuit.depthFirstTraversal(startLocation, locationVisitor);
 			
 			((LocationVisitor) locationVisitor).resetLineBreakSignal();
-			
+		}
+	}
+	
+	public static void breadthFirstTraversal() {
+		System.out.println("\t-----------------------------------------------------");
+		System.out.println("\t\tDemonstrate Traversal\n");
+		
+		userScanner.nextLine();
+		
+		System.out.print("\tEnter Starting Location: ");
+		Location startLocation = availableLocations.get(userScanner.nextLine());
+		
+		if (startLocation != null) {			
 			System.out.print("\n\n\t___ BREADTH FIRST TRAVERSAL ___\n");
 			possibleEulerCircuit.breadthFirstTraversal(startLocation, locationVisitor);
+			
+			((LocationVisitor) locationVisitor).resetLineBreakSignal();
 		}
 	}
 	
@@ -261,13 +279,15 @@ public class Driver {
 		System.out.println("\t-----------------------------------------------------");
 		System.out.println("\t\tFind Euler Circuit\n");
 		
-		Iterator<Entry<Location, Vertex<Location>>> iter = possibleEulerCircuit.vertexSet.entrySet().iterator();
+		if (possibleEulerCircuit.isEulerCircuit()) {
+			Iterator<Entry<Location, Vertex<Location>>> iter = possibleEulerCircuit.vertexSet.entrySet().iterator();
+			
+			while (iter.hasNext()) {
+				Entry<Location, Vertex<Location>> entry = iter.next();
+				possibleEulerCircuit.findEulerCircuit(entry.getValue());
+			}
 		
-		while (iter.hasNext()) {
-			Entry<Location, Vertex<Location>> entry = iter.next();
-			possibleEulerCircuit.findEulerCircuit(entry.getValue());
 		}
-	
 	}
 	
 	public static void saveCircuitAsTextFile() {

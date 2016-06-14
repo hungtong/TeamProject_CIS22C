@@ -5,11 +5,9 @@ import java.util.Map.Entry;
 
 public class PossibleEulerCircuit<E> extends Graph<E> {	
 	
-	private Boolean isEulerCiruit;
 	private LinkedStack<Pair<E, E>> removedEdges;
 	
 	public PossibleEulerCircuit() {
-		isEulerCiruit = null;
 		removedEdges = new LinkedStack<>();
 	}
 	
@@ -19,7 +17,7 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 	*/
 	public boolean isConnected() {
 		if (vertexSet.size() == 0) {
-			System.out.println("This Graph has no vertices");
+			System.out.println("\tThis Graph has no vertices");
 			return false;
 		}
 		
@@ -39,7 +37,7 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		// The objective is to check if all non-isolated vertices connected, if there was no non-isolated vertex, 
 		// every vertex would be considered as connected
 		if (adjacencyListSize == 0) {
-			System.out.println("This Graph is Euler Circuit because it has no non-isolated vertex");
+			System.out.println("\tThis Graph is Euler Circuit because it has no non-isolated vertex");
 			return true;
 		}
 		
@@ -57,7 +55,7 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 			Vertex<E> currentVertex = iterator.next().getValue();
 			if (currentVertex.adjList.size() > 0 && !currentVertex.isVisited()) {
 				System.out.println(
-					"The Graph cannot be Euler Circuit because it is not connected!\n" +
+					"\tThe Graph cannot be Euler Circuit because it is not connected!\n\t" +
 					"A bridge is necessary at " + currentVertex
 				);
 				return false;
@@ -78,8 +76,8 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 			Vertex<E> currentVertex = iterator.next().getValue();
 			if (currentVertex.adjList.size() % 2 != 0) {
 				System.out.println(
-						"The Graph cannot be Euler Circuit because\n" +
-						currentVertex + " has a degree of " + currentVertex.adjList.size() + " (odd number)"
+						"\tThe Graph cannot be Euler Circuit because\n\t\"" +
+						currentVertex + "\" has a degree of " + currentVertex.adjList.size() + " (odd number)"
 					);
 				return false;
 			}
@@ -93,10 +91,7 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		@return true if the graph is connected and has all even degree vertices, meaning from any vertex, we can always form a Euler Circuit 
 	*/
 	public boolean isEulerCircuit() {
-		if (isEulerCiruit == null) {
-			isEulerCiruit = new Boolean(hasAllEvenDegreeVertices() && isConnected());
-		}
-		return isEulerCiruit.booleanValue();
+		return hasAllEvenDegreeVertices() && isConnected();
 	}
 
 	/*
@@ -105,43 +100,40 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		@param startVertex - given starting vertex
 	*/
 	public <T> void findEulerCircuit(Vertex<E> startVertex) {
-		if (isEulerCircuit()) {
+		LinkedStack<Vertex<E>> simpleCycle = new LinkedStack<>();
+		
+		SimpleCircuit<Vertex<E>> eulerCircuit = new SimpleCircuit<>(new CircuitStrategy<Vertex<E>>() {
 
-			LinkedStack<Vertex<E>> simpleCycle = new LinkedStack<>();
-			
-			SimpleCircuit<Vertex<E>> eulerCircuit = new SimpleCircuit<>(new CircuitStrategy<Vertex<E>>() {
-
-				@Override
-				public void implement(Vertex<E> firstNode, Vertex<E> secondNode) {
-					addEdge(firstNode.getData(), secondNode.getData(), 0);				
-				}
-			});
-			
-					
-			simpleCycle.push(startVertex);
-			Vertex<E> currentVertex = startVertex;
-			while (!simpleCycle.isEmpty()) {
-				Vertex<E> nextVertex = getNextVertex(currentVertex);
-				if (currentVertex == nextVertex) {
-					eulerCircuit.add(currentVertex);
-					simpleCycle.pop();
-				}
-				else {
-					simpleCycle.push(nextVertex);
-					currentVertex.adjList.remove(nextVertex.getData());
-					nextVertex.adjList.remove(currentVertex.getData());
-				}
-				currentVertex = simpleCycle.peek();
+			@Override
+			public void implement(Vertex<E> firstNode, Vertex<E> secondNode) {
+				addEdge(firstNode.getData(), secondNode.getData(), 0);				
 			}
-						
-			eulerCircuit.traverseCircuit();
-			
-			System.out.println("\n\t-------------------------------------------------------------------------------");
-			System.out.println("\tONE EULER CIRCUIT STARTING AT \"" + startVertex.data + "\" IS");
-			eulerCircuit.displayForward();
-			System.out.println("\n\n\tOr");
-			eulerCircuit.displayBackward();
+		});
+		
+				
+		simpleCycle.push(startVertex);
+		Vertex<E> currentVertex = startVertex;
+		while (!simpleCycle.isEmpty()) {
+			Vertex<E> nextVertex = getNextVertex(currentVertex);
+			if (currentVertex == nextVertex) {
+				eulerCircuit.add(currentVertex);
+				simpleCycle.pop();
+			}
+			else {
+				simpleCycle.push(nextVertex);
+				currentVertex.adjList.remove(nextVertex.getData());
+				nextVertex.adjList.remove(currentVertex.getData());
+			}
+			currentVertex = simpleCycle.peek();
 		}
+					
+		eulerCircuit.traverseCircuit();
+		
+		System.out.println("\n\t-------------------------------------------------------------------------------");
+		System.out.println("\tONE EULER CIRCUIT STARTING AT \"" + startVertex.data + "\" IS");
+		eulerCircuit.displayForward();
+		System.out.println("\n\n\tOr");
+		eulerCircuit.displayBackward();
 	}
 		
 	/*
