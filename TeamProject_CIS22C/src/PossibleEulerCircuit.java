@@ -136,8 +136,8 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 						
 			eulerCircuit.traverseCircuit();
 			
-			System.out.println("\n\t-----------------------------------------------------");
-			System.out.println("\tONE EULER CIRCUIT STARTING AT " + startVertex.data + " IS");
+			System.out.println("\n\t-------------------------------------------------------------------------------");
+			System.out.println("\tONE EULER CIRCUIT STARTING AT \"" + startVertex.data + "\" IS");
 			eulerCircuit.displayForward();
 			System.out.println("\n\n\tOr");
 			eulerCircuit.displayBackward();
@@ -178,6 +178,7 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		   while (times > 0) {
 			   currentEdge = removedEdges.pop();
 			   addEdge(currentEdge.first, currentEdge.second, 0);
+			   System.out.println("\tSuccessfully Undid Edge Removal Between " + currentEdge.first + " And " + currentEdge.second);
 			   --times;
 		   }	   	   
 	   }
@@ -232,7 +233,6 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
    public void showAdjTable() {
 	   Iterator<Entry<E, Vertex<E>>> vertexIterator;
 	
-	   System.out.println( "\n\n-------------------------------------------------- ");
 	   vertexIterator = vertexSet.entrySet().iterator();
 	   while( vertexIterator.hasNext() ) {
 		   Vertex<E> currentVertex = vertexIterator.next().getValue();
@@ -241,7 +241,7 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		   Entry<E, Pair<Vertex<E>, Double>> entry;
 		   Pair<Vertex<E>, Double> pair;
 
-		   System.out.print("+ Adjacency List for \"" + currentVertex.getData() + "\":\n\t");
+		   System.out.print("\t+ Adjacency List for \"" + currentVertex.getData() + "\":\n\t\t");
 		   adjacencyListIterator = currentVertex.adjList.entrySet().iterator();
 		   while( adjacencyListIterator.hasNext() ) {
 		       entry = adjacencyListIterator.next();

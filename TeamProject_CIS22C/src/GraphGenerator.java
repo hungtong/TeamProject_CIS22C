@@ -1,5 +1,5 @@
 import java.awt.Color;
-import java.awt.FontMetrics;
+import java.awt.FontMetrics; 
 import java.awt.Graphics;
 import java.util.ArrayList;
 
@@ -101,12 +101,6 @@ public class GraphGenerator extends JFrame {
 				currentVertex.name,
 				currentVertex.xPixel - fontMetrics.stringWidth(currentVertex.name) / 2,
 				currentVertex.yPixel + fontMetrics.getHeight() / 2
-			);
-			
-			graph.drawString(
-				String.valueOf(i),
-				currentVertex.xPixel,
-				currentVertex.yPixel - 20
 			);
 		}
 	}

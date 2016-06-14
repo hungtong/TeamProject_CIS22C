@@ -4,33 +4,29 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Map.Entry;
 
 public class Driver {	
 	private static Scanner userScanner = new Scanner(System.in);
 	
 	private static HashMap<String, Location> availableLocations;
 	private static PossibleEulerCircuit<Location> possibleEulerCircuit;
-	
+	private static Visitor<Location> locationVisitor = new LocationVisitor();
 		
 	public static void main(String[] args) throws IOException {
 		
 		possibleEulerCircuit = new PossibleEulerCircuit<>();
 		availableLocations = readInputFile();
-		
-		saveCircuitAsTextFile();
-	//	navigateOption(showMenu());
-		
-				   
-		/*
-		HashMap<Location, Vertex<Location> > allLocations = possibleEulerCircuit.vertexSet;
-		Location currentLocation = availableLocations.get("UPS");
-		if (currentLocation != null)
-			possibleEulerCircuit.findEulerCircuit(allLocations.get(currentLocation));
-		else System.out.println("\tThis location is not available in the graph!");	*/
 
-		possibleEulerCircuit.showAdjTable(); 
-
+		int userChoice = 0;
+		while (userChoice != 8) {
+			userChoice = showMenu();
+			navigateOption(userChoice);
+			System.in.read();
+		}
+			   		
 	}
 	
 	public static HashMap<String, Location> readInputFile() {
@@ -77,32 +73,31 @@ public class Driver {
 		int trialLimit = 3;
 		
 		for (;;) {
-			System.out.println("\t-----------------------------------------------------");
+			System.out.println("\n\t-----------------------------------------------------");
 			
 			System.out.println("\tType A Number To Go To The Option");
 			System.out.println("\t\t1. Add Edge");
 			System.out.println("\t\t2. Remove Edge");
 			System.out.println("\t\t3. Undo Removal");
 			System.out.println("\t\t4. Diplay Graph");
-			System.out.println("\t\t5. Solve Problem");
-			System.out.println("\t\t6. Save as Text File");
-			System.out.println("\t\t7. Exit");
+			System.out.println("\t\t5. Demonstrate Traversal");
+			System.out.println("\t\t6. Solve Problem");
+			System.out.println("\t\t7. Save as Text File");
+			System.out.println("\t\t8. Exit");
 			
 			System.out.println();
 			
 			System.out.print("\tYour Choice: ");
 			
-		//	@SuppressWarnings("resource")
-			Scanner input = new Scanner(System.in);
-			
+			userScanner = new Scanner(System.in);
 			try {
-				int userChoice = input.nextInt();
-				if (userChoice < 1 || userChoice > 7) 
+				int userChoice = userScanner.nextInt();
+				
+				
+				if (userChoice < 1 || userChoice > 8) 
 					System.out.println("\n\tInvalid Number! Please Type Another Number.");
-				else {
-					input.close();
+				else 
 					return userChoice;
-				}
 			}
 			catch (InputMismatchException exception) {
 				trialLimit--;
@@ -111,55 +106,60 @@ public class Driver {
 					System.out.println("\tThe Program Is Forced To End");
 					System.exit(0);
 				}
-				System.out.println("\n\tInvalid Input! You Can Type Again " + trialLimit +" times.");
+				System.out.println("\n\tInvalid Input! You Can Type Again " + trialLimit +" Times.");
 				System.in.read();
-			}
-									
+			}							
 		} 	
 	}
 	
-	public static void navigateOption(int option) {
+	public static void navigateOption(int option) throws IOException {
 		switch (option) {
 	        case 1:  
 	        	addingEdge();
-	            break;
+	        	break;
 	        case 2:  
-	        	        	
+	        	removingEdge(); 
 	        	break;
 	        case 3:  
-	        	
+	        	undoRemovingEdge();
 	        	break;
 	        case 4:  
-	        	
-	            break;
+	        	displayingGraph();
+	        	break;
 	        case 5:  
-	        	
+	        	displayingGraph();
 	        	break;
 	        case 6:  
-	        	saveCircuitAsTextFile();
+	        	findingEulerCircuit();
 	        	break;
 	        case 7:  
-	        
+	        	saveCircuitAsTextFile();
+	        	break;
+	        case 8:  
+	        	System.out.println("\tThank You For Using The Program");
 	        	break;
 		}
 	}
 	
 	public static void addingEdge() {
-		Scanner input = new Scanner(System.in);
+		System.out.println("\t-----------------------------------------------------");
+		System.out.println("\t\tAdd Edge\n");
+		
+		userScanner.nextLine();
 		
 		System.out.print("\n\tEnter Location 1: ");
-		String location1 = input.nextLine();
+		String location1 = userScanner.nextLine();
+		
 		if (!availableLocations.containsKey(location1)) {
-			System.out.println("\tFailed To Add Edge.\n" + location1 + " Is Not In The Graph.");
-			input.close();
+			System.out.println("\n\tFailed To Add Edge.\n\t\"" + location1 + "\" Is Not In The Graph.");
 			return;
 		}
 		
 		System.out.print("\n\tEnter Location 2: ");
-		String location2 = input.nextLine();
-		if (!availableLocations.containsKey(location1)) {
-			System.out.println("\tFailed To Add Edge.\n" + location2 + " Is Not In The Graph.");
-			input.close();
+		String location2 = userScanner.nextLine();
+		
+		if (!availableLocations.containsKey(location2)) {
+			System.out.println("\n\tFailed To Add Edge.\n\t\"" + location2 + "\" Is Not In The Graph.");
 			return;
 		}
 			
@@ -167,15 +167,116 @@ public class Driver {
 		Location destination = availableLocations.get(location2);
 		
 		possibleEulerCircuit.addEdge(source, destination, 0);
-		System.out.println("\tSuccessfully Added Edges Between " + location1 + " And " + location2);
+		System.out.println("\n\tSuccessfully Added Edges Between \"" + location1 + "\" And \"" + location2 + "\"");
+	}
+	
+	public static void removingEdge() {
+		System.out.println("\t-----------------------------------------------------");
+		System.out.println("\t\tRemove Edge\n");
 		
-		input.close();
+		userScanner.nextLine();
+		
+		System.out.print("\n\tEnter Location 1: ");
+		String location1 = userScanner.nextLine();
+		
+		if (!availableLocations.containsKey(location1)) {
+			System.out.println("\tFailed To Add Edge.\n\t\"" + location1 + "\" Is Not In The Graph.");
+			return;
+		}
+		
+		System.out.print("\n\tEnter Location 2: ");
+		String location2 = userScanner.nextLine();
+		
+		if (!availableLocations.containsKey(location2)) {
+			System.out.println("\tFailed To Add Edge.\n\t\"" + location2 + "\" Is Not In The Graph.");
+			return;
+		}
+			
+		Location source = availableLocations.get(location1);
+		Location destination = availableLocations.get(location2);
+		
+		if (possibleEulerCircuit.remove(source, destination))
+			System.out.println("\tSuccessfully Removed Edges Between \"" + location1 + "\" And \"" + location2 + "\"");
+
+	}
+	
+	public static void undoRemovingEdge() throws IOException {
+		System.out.println("\t-----------------------------------------------------");
+		System.out.println("\t\tUndo Removing Edge\n");
+		
+		userScanner.nextLine();
+		int trialLimit = 3;
+
+		for (;;) {								
+			try {
+				System.out.print("\n\tEnter Number of Times To Undo: ");
+				int undoTimes = userScanner.nextInt();
+				possibleEulerCircuit.undoRemoval(undoTimes);
+				return;
+			}
+			catch (InputMismatchException exception) {
+				trialLimit--;
+				if (trialLimit == 0) {
+					System.out.println("\n\tYou Have Exceeded Invalid Input Trial Limits!");
+					System.out.println("\tThe Program Is Forced To End");
+					System.exit(0);
+				}
+				System.out.println("\n\tInvalid Input! You Can Type Again " + trialLimit +" Times.");
+				System.in.read();
+			}
+									
+		} 	
+	}
+	
+	public static void displayingGraph() throws IOException {
+		System.out.println("\t-----------------------------------------------------");
+		System.out.println("\t\tDisplay Graph\n");
+					
+		System.out.println("\t____ ADJACENCY LISTS ____\n");
+		possibleEulerCircuit.showAdjTable();
+		
+	}
+	
+	public static void demonstrateTraversal() {
+		System.out.println("\t-----------------------------------------------------");
+		System.out.println("\t\tDemonstrate Traversal\n");
+		
+		userScanner.nextLine();
+		
+		System.out.print("\tEnter Starting Location: ");
+		Location startLocation = availableLocations.get(userScanner.nextLine());
+		
+		if (startLocation != null) {
+			System.out.print("\n\t___ DEPTH FIRST TRAVERSAL ___\n");
+			possibleEulerCircuit.depthFirstTraversal(startLocation, locationVisitor);
+			
+			((LocationVisitor) locationVisitor).resetLineBreakSignal();
+			
+			System.out.print("\n\n\t___ BREADTH FIRST TRAVERSAL ___\n");
+			possibleEulerCircuit.breadthFirstTraversal(startLocation, locationVisitor);
+		}
+	}
+	
+	public static void findingEulerCircuit() {
+		System.out.println("\t-----------------------------------------------------");
+		System.out.println("\t\tFind Euler Circuit\n");
+		
+		Iterator<Entry<Location, Vertex<Location>>> iter = possibleEulerCircuit.vertexSet.entrySet().iterator();
+		
+		while (iter.hasNext()) {
+			Entry<Location, Vertex<Location>> entry = iter.next();
+			possibleEulerCircuit.findEulerCircuit(entry.getValue());
+		}
+	
 	}
 	
 	public static void saveCircuitAsTextFile() {
+		System.out.println("\t-----------------------------------------------------");
+		System.out.println("\t\tSave Circuit\n");
+		
+		userScanner.nextLine();
+		
 		String filename;
-        Scanner scanner = null;
-        
 		System.out.print("\tEnter the input filename: ");
 		filename = userScanner.nextLine();
     	File file= new File(filename);
@@ -185,14 +286,8 @@ public class Driver {
     	}
     	catch (IOException exception) {
     		
-    	}
-    	finally {
-    		if (scanner != null) 
-    			scanner.close();
-		}
-    	
+    	}   	
 	}
-	
 	
 	 /**
 	   * Open an input file to read
@@ -203,6 +298,7 @@ public class Driver {
         Scanner scanner=null;
         
 		System.out.print("\tEnter the input filename: ");
+		
 		filename = userScanner.nextLine();
     	File file= new File(filename);
 
