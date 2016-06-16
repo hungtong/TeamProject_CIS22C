@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -102,6 +105,8 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		@param startVertex - given starting vertex
 	*/
 	public <T> void findEulerCircuit(Vertex<E> startVertex) {
+		eulerCircuit.clear();
+		
 		LinkedStack<Vertex<E>> simpleCycle = new LinkedStack<>();
 		
 		simpleCycle.push(startVertex);
@@ -137,6 +142,33 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		eulerCircuit.displayForward();
 		System.out.println("\n\n\tOr");
 		eulerCircuit.displayBackward();
+	}
+	
+	public void saveEulerCircuit(PrintWriter printWriter) throws IOException {
+		if (eulerCircuit.getLength() > 0) {
+			BufferedWriter bufferedWriter = new BufferedWriter(printWriter);
+	    	
+			bufferedWriter.write("ONE EULER CIRCUIT IS");
+	    	bufferedWriter.newLine();
+			eulerCircuit.traverseCircuit(new CircuitStrategy<Vertex<E>>() {
+
+				@Override
+				public void implement(Vertex<E> firstNode, Vertex<E> secondNode) {
+					try {
+						
+						bufferedWriter.write("+ " + firstNode.getData());
+						bufferedWriter.newLine();
+					}
+					catch (IOException ex) {
+						System.out.println("\tFailed To Save Graph As Text File");
+					}				
+				}
+			});
+			bufferedWriter.write("+ " + eulerCircuit.getEntry(eulerCircuit.getLength()).getData());
+			
+			bufferedWriter.close();
+	    	
+		}
 	}
 		
 	/*
@@ -211,41 +243,28 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 
    @Override
    public boolean remove(E start, E end) {
-   	Vertex<E> startVertex = vertexSet.get(start);
-	   boolean removedOK = false;
-
-	   if( startVertex != null )
-	   {
-		   Pair<Vertex<E>, Double> endPair = startVertex.adjList.remove(end);
-		   removedOK = endPair!=null;
-	   }
-		Vertex<E> endVertex = vertexSet.get(end);
-		if( endVertex != null )
-		{
-			Pair<Vertex<E>, Double> startPair = endVertex.adjList.remove(start);
-			removedOK = startPair!=null ;
-		}
-
-		if (removedOK) 
+	  boolean removedOK = super.remove(start, end);
+	  if (removedOK) 
 			removedEdges.push(new Pair<E, E>(start, end));
-	   return removedOK;
+	  
+	  return removedOK;
    }
    
-   protected void undoRemoval() {
-   	undoRemoval(1);
-   }
+   	protected void undoRemoval() {
+	   undoRemoval(1);
+    }
 
-   protected void undoRemoval(int times) {
-   	if (removedEdges.size() == 0) {
-   		System.out.println("\tThere Is Nothing To Undo");
-   		return;
-   	}
-
-   	if (times < 1) {
-   		System.out.println("\tNumber of Undos Cannot Be Less Than 1");
-   		return;
-   	}
-
+   	protected void undoRemoval(int times) {
+   		if (removedEdges.size() == 0) {
+	   		System.out.println("\tThere Is Nothing To Undo");
+	   		return;
+	   	}
+	
+	   	if (times < 1) {
+	   		System.out.println("\tNumber of Undos Cannot Be Less Than 1");
+	   		return;
+	   	}
+	
 	    Pair<E,E> currentEdge;
 
 	    if (times >= removedEdges.size())
@@ -257,5 +276,5 @@ public class PossibleEulerCircuit<E> extends Graph<E> {
 		    System.out.println("\tSuccessfully Undid Edge Removal Between " + currentEdge.first + " And " + currentEdge.second);
 		    --times;
 	    }	   	   
-  }  
+	 }  
 }

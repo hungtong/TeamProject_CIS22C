@@ -1,5 +1,5 @@
 public class SimpleCircuit<T> extends LList2<T> {
-		
+
 	public void traverseCircuit(CircuitStrategy<T> strategy) {
 	    Node2 currentNode;
 	    currentNode = firstDummyNode.getNextNode(); 

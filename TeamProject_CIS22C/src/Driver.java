@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.InputMismatchException;
-import java.util.Iterator;
 import java.util.Scanner;
-import java.util.Map.Entry;
 
 public class Driver {	
 	private static Scanner userScanner = new Scanner(System.in);
@@ -273,6 +271,9 @@ public class Driver {
 			
 			((LocationVisitor) locationVisitor).resetLineBreakSignal();
 		}
+		else {
+			System.out.println("\t\"" + startLocation + "\" Is Not In The Graph");
+		}
 	}
 	
 	public static void breadthFirstTraversal() {
@@ -290,6 +291,9 @@ public class Driver {
 			
 			((LocationVisitor) locationVisitor).resetLineBreakSignal();
 		}
+		else {
+			System.out.println("\t\"" + startLocation + "\" Is Not In The Graph");
+		}
 	}
 	
 	public static void findingEulerCircuit() {
@@ -298,15 +302,38 @@ public class Driver {
 		
 		userScanner.nextLine();
 		
-		if (possibleEulerCircuit.isEulerCircuit()) {
-			Iterator<Entry<Location, Vertex<Location>>> iter = possibleEulerCircuit.vertexSet.entrySet().iterator();
+		System.out.print("\tEnter Starting Location: ");
+		String locationName = userScanner.nextLine();
+		Location startLocation = availableLocations.get(locationName);
 		
-			while (iter.hasNext()) {
-				Entry<Location, Vertex<Location>> entry = iter.next();
-				possibleEulerCircuit.findEulerCircuit(entry.getValue());
+		if (startLocation != null) {			
+			if (possibleEulerCircuit.isEulerCircuit()) {
+				possibleEulerCircuit.findEulerCircuit(possibleEulerCircuit.vertexSet.get(startLocation));
+				
+				System.out.println("\n\n\tDo You Want To Save Solution? (Yes/No)");	
+				System.out.print("\tYour Choice: ");
+			//	userScanner.nextLine();
+				boolean yes = userScanner.nextLine().equalsIgnoreCase("yes");
+				
+				if (yes) {
+					String filename;
+					System.out.print("\n\tEnter Where You Want To Save: ");
+					filename = userScanner.nextLine();
+			    	File file= new File(filename);
+			    	
+			    	try {
+			    		possibleEulerCircuit.saveEulerCircuit(new PrintWriter(file));
+			    		System.out.println("\tSuccessfully Saved Euler Circuit In " + filename);
+			    	}
+			    	catch (IOException exception) {
+			    		System.out.println("\tFailed To Save Euler Circuit");
+			    	}  
+				}
+				
 			}
-			
-
+		}
+		else {
+			System.out.println("\t\"" + locationName + "\" Is Not In The Graph");
 		}
 	}
 	
@@ -317,15 +344,16 @@ public class Driver {
 		userScanner.nextLine();
 		
 		String filename;
-		System.out.print("\tEnter the input filename: ");
+		System.out.print("\tEnter Where You Want To Save: ");
 		filename = userScanner.nextLine();
     	File file= new File(filename);
     	
     	try {
     		possibleEulerCircuit.saveAsTextFile(new PrintWriter(file));
+    		System.out.println("Successfully Save The Graph As Text File In" + filename);
     	}
     	catch (IOException exception) {
-    		
+    		System.out.println("\tFailed To Save The Graph As Text File");
     	}   	
 	}
 	

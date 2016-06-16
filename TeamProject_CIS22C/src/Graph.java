@@ -183,7 +183,7 @@ public class Graph<E> {
     		bufferedWriter.newLine();
     	}
     	catch (IOException ex) {
-    		System.out.println("Failed to save graph as text file");
+    		System.out.println("\tFailed to save graph as text file");
     	}
     }
     
